@@ -77,7 +77,7 @@ const S = (...lines) => lines;
 const POEMS = [
   /* ---------------- MATTERS OF THE HEART ---------------- */
   {
-    slug: "for-u", cat: "heart", title: "For U", kicker: "A love that arrived unannounced",
+    slug: "pleasant-surprise", cat: "heart", title: "A Pleasant Surprise", kicker: "A love that arrived unannounced",
     font: "romantic", accent: "#e8577d",
     img: { w: 1400, h: 1000, prompt: "Soft portrait of a woman with expressive eyes, a faint 'Twix' smile, blush-pink and cream watercolour, delicate and dreamy, tender mood. No text." },
     stanzas: [
@@ -91,7 +91,7 @@ const POEMS = [
     ]
   },
   {
-    slug: "just-for-u", cat: "heart", title: "Just for U", kicker: "Lines for a heart never to be broken",
+    slug: "just-for-you", cat: "heart", title: "Just for You", kicker: "Lines for a heart never to be broken",
     font: "airy", accent: "#f06e9c",
     img: { w: 1400, h: 1000, prompt: "A limitless open sky at dawn with a single bird ascending, pastel rose and gold, feeling of boundless freedom and tenderness, minimal watercolour. No text." },
     stanzas: [
