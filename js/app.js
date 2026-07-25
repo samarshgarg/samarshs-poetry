@@ -25,17 +25,35 @@
   const ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const IMG_ICON = `<svg class="ph-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-  /* image placeholder block */
-  function imgPlaceholder(img, tag) {
+  /* image placeholder block — shows the real image automatically if the file
+     exists, otherwise falls back to the AI-brief card. file = images/<name>.jpg */
+  function imgPlaceholder(img, tag, file) {
+    const realImg = file
+      ? `<img class="real-img" src="${file}" alt="" loading="lazy"
+           onload="this.closest('.img-ph').classList.add('has-img')"
+           onerror="imgFallback(this)">`
+      : "";
     return `
     <figure class="img-ph ${tag === 'hero' ? 'hero-img' : ''}">
-      <span class="ph-tag">Image placeholder — upload later</span>
-      ${IMG_ICON}
-      <span class="ph-label">AI image brief</span>
-      <span class="ph-desc">${esc(img.prompt)}</span>
-      <span class="ph-dim">${img.w} × ${img.h}px · landscape</span>
+      ${realImg}
+      <div class="ph-content">
+        <span class="ph-tag">Image placeholder — upload later</span>
+        ${IMG_ICON}
+        <span class="ph-label">AI image brief</span>
+        <span class="ph-desc">${esc(img.prompt)}</span>
+        <span class="ph-dim">${img.w} × ${img.h}px · landscape</span>
+      </div>
     </figure>`;
   }
+  // try .jpg, then .png, then give up and keep the placeholder card
+  window.imgFallback = function (el) {
+    if ((el.dataset.tries || "jpg") === "jpg") {
+      el.dataset.tries = "png";
+      el.src = el.src.replace(/\.jpg(\?.*)?$/i, ".png");
+    } else {
+      el.remove();
+    }
+  };
 
   /* =============================================================
      VIEWS
@@ -157,7 +175,7 @@
           <p class="eyebrow reveal">${esc(c.glyph)} &nbsp;Collection · ${poems.length} poems</p>
           <h1 class="reveal">${esc(c.name)}</h1>
           <p class="lead reveal">${esc(c.blurb)}</p>
-          <div class="reveal imgspec">${imgPlaceholder(c.img, 'hero')}</div>
+          <div class="reveal imgspec">${imgPlaceholder(c.img, 'hero', `images/cover-${key}.jpg`)}</div>
         </div>
       </section>
       <section class="section" style="padding-top:20px">
@@ -203,7 +221,7 @@
             <div class="p-rule"></div>
           </header>
 
-          ${imgPlaceholder(p.img, 'hero')}
+          ${imgPlaceholder(p.img, 'hero', `images/poem-${p.slug}.jpg`)}
 
           <div class="poem-body">${body}</div>
 
