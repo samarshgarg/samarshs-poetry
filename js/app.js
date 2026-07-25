@@ -71,7 +71,7 @@
     const cards = catList.map((key, i) => {
       const c = CATEGORIES[key], n = poemsInCat(key).length;
       return `
-      <a class="col-card reveal" href="#/c/${key}" data-link
+      <a class="col-card reveal" href="/c/${key}" data-link
          style="--c:${c.accent}" data-glyph="${c.glyph}">
         <div class="col-index">Collection ${String(i + 1).padStart(2, "0")}</div>
         <div>
@@ -98,8 +98,8 @@
             <div class="m"><b>∞</b><span>Emotions</span></div>
           </div>
           <div class="hero-cta">
-            <a class="btn btn-primary" href="#/collections" data-link>Explore the Collections ${ARROW}</a>
-            <a class="btn btn-ghost" href="#/all" data-link>Read every poem</a>
+            <a class="btn btn-primary" href="/collections" data-link>Explore the Collections ${ARROW}</a>
+            <a class="btn btn-ghost" href="/all" data-link>Read every poem</a>
           </div>
         </div>
         <div class="scroll-hint"><span>Scroll</span><span class="line"></span></div>
@@ -133,7 +133,7 @@
     const cards = catList.map((key, i) => {
       const c = CATEGORIES[key], n = poemsInCat(key).length;
       return `
-      <a class="col-card reveal" href="#/c/${key}" data-link style="--c:${c.accent}" data-glyph="${c.glyph}">
+      <a class="col-card reveal" href="/c/${key}" data-link style="--c:${c.accent}" data-glyph="${c.glyph}">
         <div class="col-index">Collection ${String(i + 1).padStart(2, "0")}</div>
         <div>
           <h3>${esc(c.name)}</h3>
@@ -161,7 +161,7 @@
     setAccent(c.accent, c.accent2 || c.accent);
     const poems = poemsInCat(key);
     const cards = poems.map((p, i) => `
-      <a class="poem-card reveal" href="#/p/${p.slug}" data-link style="--c:${p.accent || c.accent}">
+      <a class="poem-card reveal" href="/p/${p.slug}" data-link style="--c:${p.accent || c.accent}">
         <span class="pc-arrow">${ARROW}</span>
         <span class="pc-num">№ ${String(i + 1).padStart(2, "0")}</span>
         <h3>${esc(p.title)}</h3>
@@ -175,13 +175,13 @@
           <p class="eyebrow reveal">${esc(c.glyph)} &nbsp;Collection · ${poems.length} poems</p>
           <h1 class="reveal">${esc(c.name)}</h1>
           <p class="lead reveal">${esc(c.blurb)}</p>
-          <div class="reveal imgspec">${imgPlaceholder(c.img, 'hero', `images/cover-${key}.jpg`)}</div>
+          <div class="reveal imgspec">${imgPlaceholder(c.img, 'hero', `/images/cover-${key}.jpg`)}</div>
         </div>
       </section>
       <section class="section" style="padding-top:20px">
         <div class="wrap">
           <div class="poem-grid">${cards}</div>
-          <div class="center"><a class="back-to-cat" href="#/collections" data-link>← All collections</a></div>
+          <div class="center"><a class="back-to-cat" href="/collections" data-link>← All collections</a></div>
         </div>
       </section>`;
   }
@@ -221,18 +221,18 @@
             <div class="p-rule"></div>
           </header>
 
-          ${imgPlaceholder(p.img, 'hero', `images/poem-${p.slug}.jpg`)}
+          ${imgPlaceholder(p.img, 'hero', `/images/poem-${p.slug}.jpg`)}
 
           <div class="poem-body">${body}</div>
 
-          <div class="center"><a class="back-to-cat" href="#/c/${p.cat}" data-link>← Back to ${esc(c.name)}</a></div>
+          <div class="center"><a class="back-to-cat" href="/c/${p.cat}" data-link>← Back to ${esc(c.name)}</a></div>
 
           <nav class="poem-nav">
-            <a class="pnav prev" href="#/p/${prev.slug}" data-link>
+            <a class="pnav prev" href="/p/${prev.slug}" data-link>
               <span class="pn-label">← Previous</span>
               <span class="pn-title">${esc(prev.title)}</span>
             </a>
-            <a class="pnav next" href="#/p/${next.slug}" data-link>
+            <a class="pnav next" href="/p/${next.slug}" data-link>
               <span class="pn-label">Next →</span>
               <span class="pn-title">${esc(next.title)}</span>
             </a>
@@ -249,7 +249,7 @@
     const items = POEMS.map(p => {
       const c = CATEGORIES[p.cat];
       return `
-      <a class="all-item reveal" href="#/p/${p.slug}" data-link data-cat="${p.cat}" style="--c:${p.accent || c.accent}">
+      <a class="all-item reveal" href="/p/${p.slug}" data-link data-cat="${p.cat}" style="--c:${p.accent || c.accent}">
         <span class="ai-dot"></span>
         <span class="ai-cat">${esc(c.name)}</span>
         <h3>${esc(p.title)}</h3>
@@ -298,7 +298,7 @@
           <p class="eyebrow">Lost in the margins</p>
           <h2 style="font-family:var(--display);font-size:2.6rem">This page drifted away…</h2>
           <p style="color:var(--ink-soft)">Like some feelings, it isn't where we left it.</p>
-          <div class="center" style="margin-top:26px"><a class="btn btn-primary" href="#/" data-link>Return home ${ARROW}</a></div>
+          <div class="center" style="margin-top:26px"><a class="btn btn-primary" href="/" data-link>Return home ${ARROW}</a></div>
         </div>
       </section>`;
   }
@@ -307,8 +307,8 @@
      ROUTER
      ============================================================= */
   function parseRoute() {
-    const h = (location.hash || "#/").replace(/^#/, "");
-    const parts = h.split("/").filter(Boolean); // e.g. ['c','heart']
+    const path = (location.pathname || "/").replace(/\/+$/, "") || "/";
+    const parts = path.split("/").filter(Boolean); // e.g. ['c','heart']
     if (parts.length === 0) return { name: "home" };
     if (parts[0] === "collections") return { name: "collections" };
     if (parts[0] === "all") return { name: "all" };
@@ -345,7 +345,7 @@
 
   function highlightNav(route) {
     document.querySelectorAll(".nav-links a").forEach(a => a.classList.remove("active"));
-    const map = { home: "#/", collections: "#/collections", all: "#/all", about: "#/about" };
+    const map = { home: "/", collections: "/collections", all: "/all", about: "/about" };
     const target = map[route.name];
     if (target) {
       const el = document.querySelector(`.nav-links a[href="${target}"]`);
@@ -410,16 +410,17 @@
     }));
   }
 
-  /* ---------- navigation with veil transition ---------- */
+  /* ---------- navigation with veil transition (clean URLs, History API) ---------- */
   let navigating = false;
-  function navigate(hash) {
+  function navigate(path) {
     if (navigating) return;
-    if (hash === location.hash) { render(parseRoute()); window.scrollTo({ top: 0 }); return; }
+    if (path === location.pathname) { render(parseRoute()); window.scrollTo({ top: 0 }); return; }
     navigating = true;
     veil.classList.remove("out");
     veil.classList.add("in");
     setTimeout(() => {
-      location.hash = hash;          // triggers hashchange -> render
+      history.pushState({}, "", path);
+      render(parseRoute());
       window.scrollTo({ top: 0 });
       veil.classList.remove("in");
       veil.classList.add("out");
@@ -427,20 +428,21 @@
     }, 380);
   }
 
-  // intercept internal links
+  // intercept internal links (paths beginning with "/")
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a[data-link]");
     if (!a) return;
     const href = a.getAttribute("href");
-    if (!href || !href.startsWith("#")) return;
+    if (!href || !href.startsWith("/")) return;
     e.preventDefault();
     closeMenu();
     navigate(href);
   });
 
-  window.addEventListener("hashchange", () => {
-    if (!navigating) { render(parseRoute()); window.scrollTo({ top: 0 }); }
-    else render(parseRoute());
+  // browser back / forward
+  window.addEventListener("popstate", () => {
+    render(parseRoute());
+    window.scrollTo({ top: 0 });
   });
 
   /* =============================================================
@@ -535,7 +537,6 @@
   })();
 
   /* ---------- boot ---------- */
-  if (!location.hash) location.hash = "#/";
   render(parseRoute());
   onScroll();
 })();
