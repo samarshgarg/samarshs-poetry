@@ -318,27 +318,47 @@
     return { name: "notfound" };
   }
 
+  const SITE_HOST = "https://www.samarshpoetry.com";
+  function setMeta(name, value, attr) {
+    attr = attr || "name";
+    let el = document.head.querySelector(`meta[${attr}="${name}"]`);
+    if (!el) { el = document.createElement("meta"); el.setAttribute(attr, name); document.head.appendChild(el); }
+    el.setAttribute("content", value);
+  }
+  function setCanonical(url) {
+    let el = document.head.querySelector('link[rel="canonical"]');
+    if (!el) { el = document.createElement("link"); el.rel = "canonical"; document.head.appendChild(el); }
+    el.href = url;
+    setMeta("og:url", url, "property");
+  }
+
   function render(route) {
     let html, title = "Samarsh's Poetry";
+    let desc = "A collection of over fifty poems on love, loss, family, reflection and the world — by Samarsh Garg.";
     switch (route.name) {
       case "home": html = viewHome(); break;
-      case "collections": html = viewCollections(); title = "Collections · Samarsh's Poetry"; break;
+      case "collections": html = viewCollections(); title = "Collections · Samarsh's Poetry"; desc = "Six curated collections gathered from over fifty poems by Samarsh Garg."; break;
       case "category": {
         html = viewCategory(route.key);
-        const c = CATEGORIES[route.key]; if (c) title = c.name + " · Samarsh's Poetry";
+        const c = CATEGORIES[route.key]; if (c) { title = c.name + " · Samarsh's Poetry"; desc = c.blurb; }
         break;
       }
       case "poem": {
         html = viewPoem(route.slug);
-        const p = poemBySlug[route.slug]; if (p) title = p.title + " · Samarsh's Poetry";
+        const p = poemBySlug[route.slug];
+        if (p) { title = p.title + " · Samarsh's Poetry"; desc = `${p.title} — ${p.kicker}. A poem by Samarsh Garg. “${firstLine(p)}”`; }
         break;
       }
-      case "all": html = viewAll(); title = "All Poems · Samarsh's Poetry"; break;
-      case "about": html = viewAbout(); title = "About · Samarsh's Poetry"; break;
+      case "all": html = viewAll(); title = "All Poems · Samarsh's Poetry"; desc = "Read all " + POEMS.length + " poems by Samarsh Garg in one place."; break;
+      case "about": html = viewAbout(); title = "About · Samarsh's Poetry"; desc = "About Samarsh's Poetry and the poet, Samarsh Garg."; break;
       default: html = viewNotFound(); title = "Not found · Samarsh's Poetry";
     }
     app.innerHTML = html;
     document.title = title;
+    setMeta("description", desc);
+    setMeta("og:title", title, "property");
+    setMeta("og:description", desc, "property");
+    setCanonical(SITE_HOST + (location.pathname === "/" ? "/" : location.pathname.replace(/\/+$/, "")));
     highlightNav(route);
     afterRender(route);
   }
